@@ -1,7 +1,26 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import './MyApp.css';
+import Login from './components/Login';
+import AddNewScents from './components/AddNewScents'
 
 function App() {
+	
+	const [token, setToken] = useState(sessionStorage.getItem("localToken") || '');	
+
+
+	
+	useEffect ( () => {
+		sessionStorage.setItem("localToken",token);
+
+	}, [token]);
+
+	if (!token) {
+		return <Login setToken = {setToken}/>
+	};
+
+
   return (
 		<>
 		<div className="page-wrapper" style={{backgroundColor: "#f1f1f1"}}>
@@ -15,10 +34,16 @@ function App() {
 			</div>		
 			<div className="row">
 				<div className="column-side" style={{backgroundColor: "#aaa", height: '80%'}}>
-					nav
+					<p><a style={{marginLeft: '10%'}} href="/customid">Add New Scent</a></p>
 				</div>
 				<div className="column-middle" >
-					content
+					<BrowserRouter>
+						<Switch>
+							<Route path="/customid">
+								<AddNewScents setToken = {setToken} token = {token}/>
+							</Route>	
+						</Switch>
+					</BrowserRouter>
 				</div>
 			</div>
 			<div className="footer">
