@@ -8,16 +8,19 @@ import AddNewScents from './components/AddNewScents'
 function App() {
 	
 	const [token, setToken] = useState(sessionStorage.getItem("localToken") || '');	
+	const [role, setRole] = useState(sessionStorage.getItem("localRole") || '');
 
 
 	
 	useEffect ( () => {
 		sessionStorage.setItem("localToken",token);
+		sessionStorage.setItem("localRole",role);
 
-	}, [token]);
+	}, [token,role]);
 
 	if (!token) {
-		return <Login setToken = {setToken}/>
+		return <Login setToken = {setToken}
+					setRole = {setRole}/>
 	};
 
 

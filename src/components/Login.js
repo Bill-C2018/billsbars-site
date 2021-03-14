@@ -25,6 +25,7 @@ const Login = (props) => {
 			console.log(token);
 			console.log("token == " + token['token']);
 			props.setToken(token['token']);
+			props.setRole(token['role']);
 			
 		} catch (error) {
 			
@@ -50,7 +51,8 @@ const Login = (props) => {
 		try {
 			const token = await postCall(s,'http://localhost:8081/customer',' ','TRUE');
 			console.log(token);
-			props.setToken(token);
+			loginHandler(event);
+			
 		} catch (error) {
 			console.log(error);
 		}
