@@ -8,7 +8,7 @@ export const DropDownSelect = (props) => {
 				</option> );
 	
 	return (
-		<div>
+		<>
 			<table><tbody>
 			<tr>
 				<td >
@@ -27,7 +27,7 @@ export const DropDownSelect = (props) => {
 				</td>
 			</tr>
 			</tbody></table>
-		</div>
+		</>
 	)
 }
 
