@@ -1,7 +1,7 @@
 
 export const DropDownSelect = (props) => {
 	
-	console.log(props.data);
+
 	const items = props.data;
 	const listItems = items.map((item) => 
 		<option key={item} value={item}>{item}
@@ -12,14 +12,14 @@ export const DropDownSelect = (props) => {
 			<table><tbody>
 			<tr>
 				<td >
-				<label>Base Scent</label>
+				<label>{props.label}</label>
 					<select name={props.name}
 						onChange={props.changeHandler}>
 							{listItems}
 					</select>
 				</td>
 				<td >
-				<label> % of total</label>
+				<label> {props.label2}</label>
 					<input name={props.name}
 							type='text'
 							placeholder = {props.amnt}

@@ -37,24 +37,26 @@ const postCall = async (data,uri,token) => {
 	return response.json();
 }
 
-const SetRecipes = (props) => {
+const ColorRecipes = (props) => {
 	
 	const [scentName, setScentName] = useState("");
 	const [baseScent, setBaseScent] = useState(["NONE","NONE","NONE","NONE"]);
-	const [baseScentProportion, setBaseScentProportion] = useState([100,0,0,0])
+	const [baseScentProportion, setBaseScentProportion] = useState([1,0,0,0])
 	const [data,setData] = useState(null);
 	
 	
 	const doFetch =  async () => {
-		let res = await getBaseScents("http://localhost:8081/basescents");
-		const scentArray = res['baseScents'];
+		let res = await getBaseScents("http://localhost:8081/basecolors");
+		console.log(res);
+		const scentArray = res['baseColors'];
+		console.log(scentArray);
 		setData(scentArray);
 		
 	}
 	
 	useEffect ( () => {
 		doFetch();
-		props.setHeaderText("New Scent");
+		props.setHeaderText("New Color");
 	},[]);
 
 
@@ -108,20 +110,20 @@ const SetRecipes = (props) => {
 		var scents = new Array();
 		for(i = 0; i < baseScent.length; i++) {
 			if(baseScent[i] != "NONE") {
-				let basescent = {baseScent: baseScent[i],drops: baseScentProportion[i]};
+				let basescent = {color: baseScent[i],numberDrops: baseScentProportion[i]};
 				scents.push(basescent);
 			}
 		}
 		
 		let data = {
-			name: scentName,
-			baseScents: scents
+			finalColor: scentName,
+			colors: scents
 		}
 		
 		let d = JSON.stringify(data);
 
 		console.log(d);
-		const res = await postCall(d,"http://localhost:8081/scentrecipe",props.token,false);
+		const res = await postCall(d,"http://localhost:8081/colorrecipe",props.token);
 		console.log(res);
 		
 		
@@ -135,18 +137,15 @@ const SetRecipes = (props) => {
 			return;
 		}
 		var validBase = 0;
-		var totalProportion = 0;
 		var i;
 		for(i = 0; i < baseScent.length; i++) {
 			if (baseScent[i] != "NONE") {
-				totalProportion += parseInt(baseScentProportion[i]);
 				validBase = 1;
 			}
 		}
 		
-		if(validBase != 1 || totalProportion != 100) {
+		if(validBase != 1 ) {
 			console.log(validBase);
-			console.log(totalProportion);
 			console.log("Invalid base scents");
 			return;
 		}
@@ -160,38 +159,38 @@ const SetRecipes = (props) => {
 			<form onSubmit={submitHandler}>
 			<table><tbody>
 			<tr>
-				<label>Scent Name</label>
+				<label>Color Name</label>
 				<input type='text'
 						placeholder='enter name'
 						onChange={changeNameHandler}/>
 			</tr><tr>
 			<DropDownSelect data = {data}
-							label = 'Base Scent'
-							label2 = '% of total'
+							label = 'Base Color'
+							label2 = '# of drops'
 							amnt = {baseScentProportion[0]}
 							name = 'basescents0'
 							changeProportion = {changeProportionhandler}
 							changeHandler = {changeHandler}/>
 			</tr><tr>
 			<DropDownSelect data = {data}
-							label = 'Base Scent'
-							label2 = '% of total'
+							label = 'Base Color'
+							label2 = '# of drops'
 							amnt = {baseScentProportion[1]}
 							name = 'basescents1'
 							changeProportion = {changeProportionhandler}
 							changeHandler = {changeHandler}/>
 			</tr><tr>
 			<DropDownSelect data = {data}
-							label = 'Base Scent'
-							label2 = '% of total'
+							label = 'Base Color'
+							label2 = '# of drops'
 							amnt = {baseScentProportion[2]}
 							name = 'basescents2'
 							changeProportion = {changeProportionhandler}
 							changeHandler = {changeHandler}/>
 			</tr><tr>
 			<DropDownSelect data = {data}
-							label = 'Base Scent'
-							label2 = '% of total'
+							label = 'Base Color'
+							label2 = '# of drops'
 							amnt = {baseScentProportion[3]}
 							name = 'basescents3'
 							changeProportion = {changeProportionhandler}
@@ -216,5 +215,5 @@ const SetRecipes = (props) => {
 	}
 }
 
-export default SetRecipes;
+export default ColorRecipes;
 
