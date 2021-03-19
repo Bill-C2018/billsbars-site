@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 
 import './login.css';
 import {postCall } from './FetchHandlers';
+import {BaseUrl, BasePort} from './Constants';
 
 const Login = (props) => {
 	
@@ -21,7 +22,8 @@ const Login = (props) => {
         };	
 
 		try {
-			const token = await postCall(s,'http://localhost:8081/login',' ','TRUE');
+			
+			const token = await postCall(s,BaseUrl+BasePort + '/login',' ','TRUE');
 			console.log(token);
 			console.log("token == " + token['token']);
 			props.setToken(token['token']);

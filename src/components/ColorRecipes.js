@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DropDownSelect from './DropDownSelect';
+import {BaseUrl, BasePort} from './Constants';
 
 
 const getBaseScents = async (uri) => {
@@ -46,7 +47,7 @@ const ColorRecipes = (props) => {
 	
 	
 	const doFetch =  async () => {
-		let res = await getBaseScents("http://localhost:8081/basecolors");
+		let res = await getBaseScents(BaseUrl+BasePort + "/basecolors");
 		console.log(res);
 		const scentArray = res['baseColors'];
 		console.log(scentArray);
@@ -125,7 +126,7 @@ const ColorRecipes = (props) => {
 		let d = JSON.stringify(data);
 
 		console.log(d);
-		const res = await postCall(d,"http://localhost:8081/colorrecipe",props.token);
+		const res = await postCall(d,BaseUrl+BasePort + "/colorrecipe",props.token);
 		console.log(res);
 		
 		

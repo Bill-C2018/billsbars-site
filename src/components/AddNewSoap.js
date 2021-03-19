@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 import DropDownSelectNoCounter from './DropDownSelectNoCounter';
 
+import {BaseUrl, BasePort} from './Constants';
+
+
 const getSoapParts = async (uri) => {
 	
 	let encodedUri = encodeURI(uri);
@@ -30,7 +33,7 @@ const AddNewSoap = (props) => {
 	const [soapName,setSoapName] = useState("new soap");
 		
 	const fetchSoapParts = async () => {
-		var res = await getSoapParts("http://localhost:8081/newsoap")
+		var res = await getSoapParts(BaseUrl + BasePort + "/newsoap");
 		console.log(res);
 		setData(res['colorRecipeNames']);
 		setScents(res['scentRecipeNames']);

@@ -9,6 +9,7 @@ export const postCall = async (data,uri,token,isJson) => {
 		s2 = data;
 	}
 
+	console.log("++++ " + uri);
 	const requestOptions = {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json',
