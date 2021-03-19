@@ -5,6 +5,22 @@ import DropDownSelectNoCounter from './DropDownSelectNoCounter';
 import {BaseUrl, BasePort} from './Constants';
 
 
+const postCall = async (data,uri,token) => {
+
+	const requestOptions = {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
+						'Access-Token': token},
+		body: data
+	};
+	const response = await fetch(uri, requestOptions);
+	if(response.status !== 200) {
+		throw Error(response.status);
+	}
+	return response.json();
+}
+
 const getSoapParts = async (uri) => {
 	
 	let encodedUri = encodeURI(uri);
@@ -26,19 +42,27 @@ const getSoapParts = async (uri) => {
 
 const AddNewSoap = (props) => {
 
-	const [data,setData] = useState(null);
+	const [color,setColor] = useState(null);
 	const [scents,setScents] = useState(null);
 	const [moldStyles,setMoldStyles] = useState(null);
 	const [barTypes,setBarTypes] = useState(null);
 	const [soapName,setSoapName] = useState("new soap");
+	const [barCount,setBarCount] = useState("1")
+	const [selColor,setSelColor] = useState(null);
+	const [selScent,setSelScent] = useState(null);
+	const [selMold,setSelMold] = useState(null);
+	const [selType,setSelType] = useState(null);
+	const [soapType,setSoapType] = useState(null);
+	const [selSoapType,setSelSoapType] = useState(null);
 		
 	const fetchSoapParts = async () => {
 		var res = await getSoapParts(BaseUrl + BasePort + "/newsoap");
 		console.log(res);
-		setData(res['colorRecipeNames']);
+		setColor(res['colorRecipeNames']);
 		setScents(res['scentRecipeNames']);
 		setMoldStyles(res['moldStyles']);
 		setBarTypes(res['barTypes']);
+		setSoapType(res['baseTypes']);
 	}
 	
 	const setHeaderText = props.setHeaderText;
@@ -49,20 +73,73 @@ const AddNewSoap = (props) => {
 	},[]);
 	
 	const changeHandler = (event) => {
+		let target = event.target.name;
+		switch(target) {
+			case "color":
+				setSelColor(event.target.value);
+				break;
+			case "scent":
+				setSelScent(event.target.value);
+				break;
+			case "moldtype":
+				setSelMold(event.target.value);
+				break;
+			case "bartype":
+				setSelType(event.target.value);
+				break;
+			case "soaptype":
+				setSelSoapType(event.target.value);
+				break;
+		}
 		
 	}
 	
 	const nameChangeHandler = (event) => {
+		let target = event.target.name;
+		if (target  === "Soap Name") {
+			setSoapName(event.target.value);
+		} else if (target === "Soap Count") {
+			setBarCount(event.target.value);
+		}
 		
 	}
+	const doSubmit = async () => {
+		let data = {
+			barType: selType,
+			baseType: selSoapType,
+			color: selColor,
+			scent: selScent,
+			count: barCount,
+			moldStyle: selMold,
+			soapName: soapName
+		}
+		
+		let d = JSON.stringify(data);
+		console.log(d);
+		const res = await postCall(d,BaseUrl+BasePort + "/soaps",props.token);
+		console.log(res);
+		
+	}
+	
 	const submitHandler = (event) => {
 		event.preventDefault();
 		
+		if(soapName == null ||
+			selColor == null ||
+			selScent == null ||
+			selType == null ||
+			selMold == null ||
+			selSoapType == null ||
+			barCount === "0") {
+				console.log("incomplete form")
+			}
+			
+			doSubmit();
 	}
 	
 
 
-	if (data && scents && moldStyles && barTypes) {
+	if (color && scents && moldStyles && barTypes && soapType) {
 		return (
 			
 			<div align="center">
@@ -81,35 +158,41 @@ const AddNewSoap = (props) => {
 					<input style={{width: '100%'}}
 							type = 'text'
 							name = 'Soap Count'
-							placeholder = '1'
+							placeholder = {barCount}
 							onChange = {nameChangeHandler}/>
 				</td>
 			</tr>
-			<tr><td colspan='2'>
-				<DropDownSelectNoCounter data = {data}
+			<tr><td colSpan='2'>
+				<DropDownSelectNoCounter data = {color}
 								label = 'Color'
-								name = 'basescents0'
+								name = 'color'
 								changeHandler = {changeHandler}/>
 			</td></tr>
-			<tr><td colspan='2'>
+			<tr><td colSpan='2'>
 				<DropDownSelectNoCounter data = {scents}
 								label = 'Scent'
-								name = 'basescents0'
+								name = 'scent'
 								changeHandler = {changeHandler}/>
 			</td></tr>
-			<tr><td colspan='2'>
+			<tr><td colSpan='2'>
 				<DropDownSelectNoCounter data = {moldStyles}
 								label = 'Style'
-								name = 'basescents0'
+								name = 'moldtype'
 								changeHandler = {changeHandler}/>
 			</td></tr>
-			<tr><td colspan='2'>
+			<tr><td colSpan='2'>
 				<DropDownSelectNoCounter data = {barTypes}
 								label = 'Type'
-								name = 'basescents0'
+								name = 'bartype'
 								changeHandler = {changeHandler}/>
 			</td></tr>
-			<tr><td colspan='2'>
+			<tr><td colSpan='2'>
+				<DropDownSelectNoCounter data = {soapType}
+								label = 'Soap Type'
+								name = 'soaptype'
+								changeHandler = {changeHandler}/>
+			</td></tr>
+			<tr><td colSpan='2'>
 				<label>
 					<input
 						type='submit'
