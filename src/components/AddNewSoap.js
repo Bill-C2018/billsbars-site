@@ -132,6 +132,7 @@ const AddNewSoap = (props) => {
 			selSoapType == null ||
 			barCount === "0") {
 				console.log("incomplete form")
+				return;
 			}
 			
 			doSubmit();
