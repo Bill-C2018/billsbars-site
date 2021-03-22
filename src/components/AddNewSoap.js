@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import DropDownSelectNoCounter from './DropDownSelectNoCounter';
-import {postCall, getCall} from './FetchHandlers';
+import {showError, postCall, getCall} from './FetchHandlers';
 
 import {BaseUrl, BasePort} from './Constants';
 
@@ -85,6 +85,10 @@ const AddNewSoap = (props) => {
 		console.log(d);
 		const res = await postCall(d,BaseUrl+BasePort + "/soaps",props.token);
 		console.log(res);
+		if(res['code'] !== '200') {
+			showError(res['message']);
+		}
+
 		
 	}
 	

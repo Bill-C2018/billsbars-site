@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DropDownSelect from './DropDownSelect';
-import {postCall, getCall} from './FetchHandlers';
+import {showError, postCall, getCall} from './FetchHandlers';
 import {BaseUrl, BasePort} from './Constants';
 
 
@@ -93,6 +93,10 @@ const ColorRecipes = (props) => {
 
 		console.log(d);
 		const res = await postCall(d,BaseUrl+BasePort + "/colorrecipe",props.token);
+		if(res['code'] !== '200') {
+			showError(res['message']);
+		}
+
 		console.log(res);
 		
 		

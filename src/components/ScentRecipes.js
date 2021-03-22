@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DropDownSelect from './DropDownSelect';
-import {postCall, getCall} from './FetchHandlers';
+import {postCall, getCall, showError} from './FetchHandlers';
 
 import {BaseUrl, BasePort} from './Constants';
 
@@ -11,6 +11,7 @@ const SetRecipes = (props) => {
 	const [baseScent, setBaseScent] = useState(["NONE","NONE","NONE","NONE"]);
 	const [baseScentProportion, setBaseScentProportion] = useState([100,0,0,0])
 	const [data,setData] = useState(null);
+
 	
 	
 	const doFetch =  async () => {
@@ -93,8 +94,14 @@ const SetRecipes = (props) => {
 		let d = JSON.stringify(data);
 
 		console.log(d);
-		const res = await postCall(d,BaseUrl+BasePort + "/scentrecipe",props.token,false);
-		console.log(res);
+		try {
+			const res = await postCall(d,BaseUrl+BasePort + "/scentrecipe",props.token,false);
+			if(res['code'] !== '200') {
+				showError(res['message']);
+			}
+		} catch (error ) {
+			showError(error.message);
+		}
 		
 		
 	}

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import './login.css';
-import {postCall } from './FetchHandlers';
+import {showError, postCall } from './FetchHandlers';
 import {BaseUrl, BasePort} from './Constants';
 
 const Login = (props) => {
@@ -24,7 +24,11 @@ const Login = (props) => {
 		let d = JSON.stringify(s);
 		try {
 			
-			const token = await postCall(d,BaseUrl+BasePort + '/login',' ','TRUE');
+			const token = await postCall(d,BaseUrl+BasePort + '/login',' ');
+			console.log(token['code']);
+			if(token['code'] != '200') {
+				showError(token['message']);
+			}
 			console.log(token);
 			console.log("token == " + token['token']);
 			props.setToken(token['token']);
@@ -34,9 +38,9 @@ const Login = (props) => {
 			
 			console.log(error);
 			if (error.message === "404") {
-				setErrorMessage("Not Found");
+				showError("Not Found");
 			} else {
-				setErrorMessage(error.message);
+				showError(error.message);
 			}
 
 		}
@@ -50,9 +54,15 @@ const Login = (props) => {
 			"emailAddy": emailAddy,
         };	
 
-		console.log(s);
+		let d = JSON.stringify(s);
+		
 		try {
-			const token = await postCall(s,'http://localhost:8081/customer',' ','TRUE');
+			const token = await postCall(d,'http://localhost:8081/customer',' ');
+			console.log(token);
+			if(token['code'] != '200') {
+				showError(token['message']);
+			}
+			console.log("++++");
 			console.log(token);
 			loginHandler(event);
 			
