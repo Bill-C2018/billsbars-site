@@ -21,9 +21,10 @@ const Login = (props) => {
 			"emailAddy": "not needed",
         };	
 
+		let d = JSON.stringify(s);
 		try {
 			
-			const token = await postCall(s,BaseUrl+BasePort + '/login',' ','TRUE');
+			const token = await postCall(d,BaseUrl+BasePort + '/login',' ','TRUE');
 			console.log(token);
 			console.log("token == " + token['token']);
 			props.setToken(token['token']);

@@ -1,43 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import DropDownSelect from './DropDownSelect';
+import {postCall, getCall} from './FetchHandlers';
 
 import {BaseUrl, BasePort} from './Constants';
 
-
-const getBaseScents = async (uri) => {
-	
-	let encodedUri = encodeURI(uri);
-	console.log("calling fetch with uri ", encodedUri);
-	const requestOptions = {
-		method: 'GET',
-		headers: { 'Content-Type': 'application/json'},
-	};
-	
-	const response = await fetch(encodedUri,requestOptions);
-	if(response.status !== 200) {
-		console.log(response.status);
-		const text = response.status;
-		throw Error(text);
-	}
-	return response.json();
-	
-}
-
-const postCall = async (data,uri,token) => {
-
-	const requestOptions = {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json',
-					'Access-Control-Allow-Origin': '*',
-						'Access-Token': token},
-		body: data
-	};
-	const response = await fetch(uri, requestOptions);
-	if(response.status !== 200) {
-		throw Error(response.status);
-	}
-	return response.json();
-}
 
 const SetRecipes = (props) => {
 	
@@ -49,7 +15,7 @@ const SetRecipes = (props) => {
 	
 	const doFetch =  async () => {
 		
-		let res = await getBaseScents(BaseUrl+BasePort + "/basescents");
+		let res = await getCall(BaseUrl+BasePort + "/basescents");
 		const scentArray = res['baseScents'];
 		setData(scentArray);
 		
