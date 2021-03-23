@@ -12,8 +12,11 @@ const showSuccess = async (val) => {
 
 export const doGetCall = async (uri,bShowSucc) => {
 	
+	let encodedUri = encodeURI(uri);
+	console.log("calling fetch with uri ", encodedUri);
+
 	try {
-		const res = await getCall(uri);
+		const res = await getCall(encodedUri);
 		console.log(res);
 
 		if(res['code'] !== '200') {

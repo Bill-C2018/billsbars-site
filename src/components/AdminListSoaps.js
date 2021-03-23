@@ -1,35 +1,47 @@
 import React, { useState, useEffect } from 'react';
 
+import { doPostCall, doGetCall} from './FetchHandlers';
 import SoapDataTablePaged from './SoapDataTablePaged';
 import {BaseUrl, BasePort} from './Constants';
 
-const getSoapList = async (uri) => {
 
-	let encodedUri = encodeURI(uri);
-	console.log("calling fetch with uri ", encodedUri);
-	const requestOptions = {
-		method: 'GET',
-		headers: { 'Content-Type': 'application/json'},
-	};
-	
-	const response = await fetch(encodedUri,requestOptions);
-	if(response.status !== 200) {
-		console.log(response.status);
-		const text = response.status;
-		throw Error(text);
-	}
-	return response.json();
-	
-}
 
 const AdminListSoaps = (props) => {
 	
 	const [soapList,setSoapList] = useState([]);
+	const [currentPage,setCurrentPage] = useState(0);
+	const [totalPages, setTotalPages] = useState();
+	const [newUri,setNewUri] = useState(BaseUrl + BasePort + "/soaps2?info=0:10");
+	
+	const handlePreviousClick = () => {
+		if(currentPage > 0) {
+			setCurrentPage(currentPage-1);
+			let newPage = parseInt(currentPage) - 1;
+			let newURI = BaseUrl + BasePort + "/soaps2?info=0:10"
+			
+			setNewUri(newURI);
+
+		}
+	}
+	
+	const handleNextClick = async (searchString) => {
+
+		if(currentPage < totalPages) {
+			setCurrentPage(currentPage + 1);
+			let newPage = parseInt(currentPage) + 1;
+			let newURI = BaseUrl + BasePort + "/soaps2?info=0:10" 
+			setNewUri(newURI);
+
+		}
+	}
+
 	
 	const fetchSoapList = async () => {
-		var res = await getSoapList(BaseUrl + BasePort + "/soaps");
+		var res = await doGetCall(newUri);
+		if(res != null) {
 		console.log(res['listOfSoaps']);
 		setSoapList(res['listOfSoaps']);
+		}
 	}
 	
 	const setHeaderText = props.setHeaderText;
@@ -43,7 +55,10 @@ const AdminListSoaps = (props) => {
 		return (
 			<>
 			<SoapDataTablePaged data = {soapList}
-								token = {props.token}/>
+								token = {props.token}
+								handlePrev = {handlePreviousClick}
+								handleNext = {handleNextClick}
+								pagedUri = {newUri}/>
 			</>
 		);
 	} else {

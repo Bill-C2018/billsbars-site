@@ -1,0 +1,27 @@
+.MyTable {
+	flex: 1;
+}
+
+ .container > div {  
+    flex: 1;  
+}
+
+.buttonrow {
+  display: -webkit-flex;
+  display: flex;
+  margin-top: 10px
+}
+
+.buttonlcol {
+   -webkit-flex: 10;
+   -ms-flex: 10;
+   flex: 10;
+   border-right: 2;	
+}
+.buttonothercol {
+   -webkit-flex: 1;
+   -ms-flex: 1;
+   flex: 1;
+   border-right: 1px;	
+	
+}

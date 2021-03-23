@@ -25,11 +25,13 @@ const AddNewSoap = (props) => {
 	const fetchSoapParts = async () => {
 		var res = await doGetCall(BaseUrl + BasePort + "/newsoap",false);
 		console.log(res);
+		if(res != null) {
 		setColor(res['colorRecipeNames']);
 		setScents(res['scentRecipeNames']);
 		setMoldStyles(res['moldStyles']);
 		setBarTypes(res['barTypes']);
 		setSoapType(res['baseTypes']);
+		}
 	}
 	
 	const setHeaderText = props.setHeaderText;

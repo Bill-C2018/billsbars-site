@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
-import {BaseUrl, BasePort} from './Constants';
-
+import './datatable.css';
 
 
 const SoapDataTablePaged = (props) => {
+	
+
 	
 	if(props.data === null) {
 		return (
@@ -39,6 +39,22 @@ const SoapDataTablePaged = (props) => {
 				})}
 			</tbody>
 			</table>
+			<div className='buttonrow'>
+			<div className = 'buttonlcol'></div>
+			<div className='buttonothercol'>
+			<button style = {{ backgroundColor: 'lightgray', display: props.currentPage == 0 ? 'none' : ''}}
+				onClick = {() => { props.handlePrev()}}>
+				prev
+			</button>
+			</div>
+			<div className='buttonothercol'>
+			<button style = {{backgroundColor: 'lightgray', display: props.currentPage == props.totalPages -1 ? 'none' : ''}}
+			onClick = { () => { props.handleNext();}}>
+			next</button>
+			</div>
+
+			</div>
+
 			</>
 		)
 	}
