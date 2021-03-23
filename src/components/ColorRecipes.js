@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DropDownSelect from './DropDownSelect';
-import {showError, postCall, getCall} from './FetchHandlers';
+import { doPostCall, doGetCall} from './FetchHandlers';
 import {BaseUrl, BasePort} from './Constants';
 
 
@@ -13,10 +13,8 @@ const ColorRecipes = (props) => {
 	
 	
 	const doFetch =  async () => {
-		let res = await getCall(BaseUrl+BasePort + "/basecolors");
-		console.log(res);
+		let res = await doGetCall(BaseUrl+BasePort + "/basecolors",false);
 		const scentArray = res['baseColors'];
-		console.log(scentArray);
 		setData(scentArray);
 		
 	}
@@ -90,16 +88,7 @@ const ColorRecipes = (props) => {
 		}
 		
 		let d = JSON.stringify(data);
-
-		console.log(d);
-		const res = await postCall(d,BaseUrl+BasePort + "/colorrecipe",props.token);
-		if(res['code'] !== '200') {
-			showError(res['message']);
-		}
-
-		console.log(res);
-		
-		
+		await doPostCall(d,BaseUrl+BasePort + "/colorrecipe",props.token,true);
 	}
 	
 	const submitHandler = (event) => {

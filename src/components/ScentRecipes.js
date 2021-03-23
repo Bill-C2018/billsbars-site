@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import DropDownSelect from './DropDownSelect';
-import {postCall, getCall, showError} from './FetchHandlers';
 
+import DropDownSelect from './DropDownSelect';
+import {doGetCall, doPostCall} from './FetchHandlers';
 import {BaseUrl, BasePort} from './Constants';
 
 
@@ -15,12 +15,11 @@ const SetRecipes = (props) => {
 	
 	
 	const doFetch =  async () => {
-		
-		let res = await getCall(BaseUrl+BasePort + "/basescents");
+		const res = await doGetCall(BaseUrl+BasePort + "/basescents",false);
 		const scentArray = res['baseScents'];
 		setData(scentArray);
-		
 	}
+
 	
 	const setHeaderText = props.setHeaderText;
 	
@@ -94,15 +93,7 @@ const SetRecipes = (props) => {
 		let d = JSON.stringify(data);
 
 		console.log(d);
-		try {
-			const res = await postCall(d,BaseUrl+BasePort + "/scentrecipe",props.token,false);
-			if(res['code'] !== '200') {
-				showError(res['message']);
-			}
-		} catch (error ) {
-			showError(error.message);
-		}
-		
+		let res = doPostCall(d,BaseUrl+BasePort + "/scentrecipe",props.token)		
 		
 	}
 	

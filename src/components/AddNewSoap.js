@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import DropDownSelectNoCounter from './DropDownSelectNoCounter';
-import {showError, postCall, getCall} from './FetchHandlers';
+import {doPostCall, doGetCall} from './FetchHandlers';
 
 import {BaseUrl, BasePort} from './Constants';
 
@@ -23,7 +23,7 @@ const AddNewSoap = (props) => {
 	const [selSoapType,setSelSoapType] = useState(null);
 		
 	const fetchSoapParts = async () => {
-		var res = await getCall(BaseUrl + BasePort + "/newsoap");
+		var res = await doGetCall(BaseUrl + BasePort + "/newsoap",false);
 		console.log(res);
 		setColor(res['colorRecipeNames']);
 		setScents(res['scentRecipeNames']);
@@ -83,13 +83,8 @@ const AddNewSoap = (props) => {
 		
 		let d = JSON.stringify(data);
 		console.log(d);
-		const res = await postCall(d,BaseUrl+BasePort + "/soaps",props.token);
-		console.log(res);
-		if(res['code'] !== '200') {
-			showError(res['message']);
-		}
+		await doPostCall(d,BaseUrl+BasePort + "/soaps",props.token,true);
 
-		
 	}
 	
 	const submitHandler = (event) => {

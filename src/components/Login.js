@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import './login.css';
-import {showError, postCall } from './FetchHandlers';
+import { doPostCall } from './FetchHandlers';
 import {BaseUrl, BasePort} from './Constants';
 
 const Login = (props) => {
@@ -22,6 +22,10 @@ const Login = (props) => {
         };	
 
 		let d = JSON.stringify(s);
+		const token = await doPostCall(d,BaseUrl+BasePort + '/login',' ',false);
+		props.setToken(token['token']);
+		props.setRole(token['role']);
+/*		
 		try {
 			
 			const token = await postCall(d,BaseUrl+BasePort + '/login',' ');
@@ -44,6 +48,7 @@ const Login = (props) => {
 			}
 
 		}
+*/
 	}
 	
 	const createAcctHandler = async (event) => {
@@ -55,7 +60,14 @@ const Login = (props) => {
         };	
 
 		let d = JSON.stringify(s);
-		
+		const token = await doPostCall(d,BaseUrl+BasePort + '/customer',' ',false);
+		if(token != null) {
+			props.setToken(token['token']);
+			props.setRole(token['role']);
+			loginHandler(event);
+		}
+
+/*		
 		try {
 			const token = await postCall(d,'http://localhost:8081/customer',' ');
 			console.log(token);
@@ -69,7 +81,7 @@ const Login = (props) => {
 		} catch (error) {
 			console.log(error);
 		}
-	
+*/
 	}
 	
 	const handleClick = () => {
