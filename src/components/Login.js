@@ -23,8 +23,10 @@ const Login = (props) => {
 
 		let d = JSON.stringify(s);
 		const token = await doPostCall(d,BaseUrl+BasePort + '/login',' ',false);
-		props.setToken(token['token']);
-		props.setRole(token['role']);
+		if(token != null) {
+			props.setToken(token['token']);
+			props.setRole(token['role']);
+		}
 /*		
 		try {
 			
