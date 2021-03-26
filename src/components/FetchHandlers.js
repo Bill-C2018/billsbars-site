@@ -32,8 +32,26 @@ export const doGetCall = async (uri,bShowSucc) => {
 		return null;
 	}
 
-	
 } 
+
+export const doPutCall = async(data,uri,token,bShowSuccess) => {
+	try {
+		const res = await putCall(data,uri,token);
+		console.log(res);
+		if(res['code'] !== '200') {
+			showError(res['message']);
+			return null;
+		}
+		if (bShowSuccess === true) {
+			showSuccess(res['message']);
+		}
+		return res;
+	} catch (error ) {
+		showError(error.message);
+		return null;
+	}
+	
+}
 
 export const doPostCall = async (data,uri,token,bShowSucc) => {
 	try {
@@ -53,6 +71,18 @@ export const doPostCall = async (data,uri,token,bShowSucc) => {
 	}
 	
 	
+}
+const putCall = async (data,uri,token) => {
+
+	const requestOptions = {
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
+						'Access-Token': token},
+		body: data
+	};
+	const response = await fetch(uri, requestOptions);
+	return response.json();
 }
 
 const postCall = async (data,uri,token) => {

@@ -38,7 +38,7 @@ const SoapDataTablePaged = (props) => {
 						<td>{soap.baseType}</td>
 						<td>{soap.count}</td>
 						<td><button style={{width: "20", backgroundColor: 'lightgray'}}
-							onClick={() => props.editHandler()}>Edit</button>
+							onClick={() => props.editHandler(soap.id,soap.soapName)}>Edit</button>
 						</td>
 						</tr>
 					)

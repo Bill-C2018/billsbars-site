@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { doPostCall, doGetCall} from './FetchHandlers';
+import { doPutCall, doGetCall} from './FetchHandlers';
 import SoapDataTablePaged from './SoapDataTablePaged';
 import {BaseUrl, BasePort} from './Constants';
-
+import ModalUpdateDialog from './UpdateBarCount';
 
 
 const AdminListSoaps = (props) => {
@@ -13,6 +13,8 @@ const AdminListSoaps = (props) => {
 	const [totalPages, setTotalPages] = useState();
 	const [newUri,setNewUri] = useState(BaseUrl + BasePort + "/soaps2?info=0:10");
 	const [numberOfRows,setNumberOfRows] = useState(10)
+	const [isModalOpen, setModalOpen] = useState(false);
+	const [soapData, setSoapData] = useState([]);
 	
 	const handlePreviousClick = () => {
 		console.log("prev clicked");
@@ -42,10 +44,26 @@ const AdminListSoaps = (props) => {
 		}
 	}
 	
-	const editHandler = async(soapId) => {
+	const handleUpdateCount = async (soapId,newCount,soapName) => {
+		console.log(soapId + "  " + newCount + "  " + soapName);
+		let updateCount = {
+			barId: soapId,
+			soapName: soapName,
+			count: newCount
+		}
 		
+		let d = JSON.stringify(updateCount);
+
+		console.log(d);
+		doPutCall(d,BaseUrl+BasePort + "/soaps/update",props.token,true);		
+		fetchSoapList2(newUri);
+	}
+	const editHandler = async(soapId,soapName) => {
 		
-		
+		console.log(soapId + "  " + soapName);
+		let a = [soapId,soapName];
+		setSoapData(a);
+		doSetModalOpen(true);		
 	}
 
 	const fetchSoapList2 = async (uri) => {
@@ -72,6 +90,10 @@ const AdminListSoaps = (props) => {
 		}
 	}
 	
+	const doSetModalOpen = (value) => {
+		setModalOpen(value);
+	}
+	
 	const setHeaderText = props.setHeaderText;
 	useEffect ( () => {
 		
@@ -83,6 +105,12 @@ const AdminListSoaps = (props) => {
 	if(soapList != null) {
 		return (
 			<>
+			<ModalUpdateDialog 	token = {props.token}
+   							   	setModalOpen = {doSetModalOpen}
+							    isModalOpen = {isModalOpen}
+								soapData = {soapData}
+								title = "Update inventory"
+								handleUpdate = {handleUpdateCount}/>
 			<SoapDataTablePaged data = {soapList}
 								token = {props.token}
 								handlePrev = {handlePreviousClick}
