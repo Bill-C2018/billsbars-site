@@ -1,43 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import DropDownSelect from './DropDownSelect';
 
+import DropDownSelect from './DropDownSelect';
+import {doGetCall, doPostCall} from './FetchHandlers';
 import {BaseUrl, BasePort} from './Constants';
 
-
-const getBaseScents = async (uri) => {
-	
-	let encodedUri = encodeURI(uri);
-	console.log("calling fetch with uri ", encodedUri);
-	const requestOptions = {
-		method: 'GET',
-		headers: { 'Content-Type': 'application/json'},
-	};
-	
-	const response = await fetch(encodedUri,requestOptions);
-	if(response.status !== 200) {
-		console.log(response.status);
-		const text = response.status;
-		throw Error(text);
-	}
-	return response.json();
-	
-}
-
-const postCall = async (data,uri,token) => {
-
-	const requestOptions = {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json',
-					'Access-Control-Allow-Origin': '*',
-						'Access-Token': token},
-		body: data
-	};
-	const response = await fetch(uri, requestOptions);
-	if(response.status !== 200) {
-		throw Error(response.status);
-	}
-	return response.json();
-}
 
 const SetRecipes = (props) => {
 	
@@ -45,15 +11,15 @@ const SetRecipes = (props) => {
 	const [baseScent, setBaseScent] = useState(["NONE","NONE","NONE","NONE"]);
 	const [baseScentProportion, setBaseScentProportion] = useState([100,0,0,0])
 	const [data,setData] = useState(null);
+
 	
 	
 	const doFetch =  async () => {
-		
-		let res = await getBaseScents(BaseUrl+BasePort + "/basescents");
+		const res = await doGetCall(BaseUrl+BasePort + "/basescents",false);
 		const scentArray = res['baseScents'];
 		setData(scentArray);
-		
 	}
+
 	
 	const setHeaderText = props.setHeaderText;
 	
@@ -127,9 +93,7 @@ const SetRecipes = (props) => {
 		let d = JSON.stringify(data);
 
 		console.log(d);
-		const res = await postCall(d,BaseUrl+BasePort + "/scentrecipe",props.token,false);
-		console.log(res);
-		
+		let res = doPostCall(d,BaseUrl+BasePort + "/scentrecipe",props.token)		
 		
 	}
 	
