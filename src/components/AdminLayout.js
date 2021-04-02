@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import '../MyApp.css';
 import ScentRecipes from './ScentRecipes'
 import ColorRecipes from './ColorRecipes'
+import AddNewSoap from './AddNewSoap'
+import AdminListSoaps from './AdminListSoaps'
 
 const AdminLayout = (props) => {
 	
 	const [headerText,setHeaderText] = useState("Hello")
+
+
 
 	return ( 
 		<>
@@ -24,6 +28,9 @@ const AdminLayout = (props) => {
 				<div className="column-side" style={{backgroundColor: "#aaa", height: '80%'}}>
 					<p><a style={{marginLeft: '10%'}} href="/addscent">Add scent</a></p>
 					<p><a style={{marginLeft: '10%'}} href="/addcolor">Add color</a></p>
+					<p><a style={{marginLeft: '10%'}} href="/addsoap">Add Soap</a></p>
+					<p><a style={{marginLeft: '10%'}} href="/listsoap">List / update Soaps</a></p>
+			
 				</div>
 
 				<div className="column-middle" >
@@ -36,6 +43,16 @@ const AdminLayout = (props) => {
 							</Route>	
 							<Route path="/addcolor">
 								<ColorRecipes setToken = {props.setToken} 
+											  token = {props.token}
+											  setHeaderText = {setHeaderText}/>
+							</Route>	
+							<Route path="/addsoap">
+								<AddNewSoap setToken = {props.setToken} 
+											  token = {props.token}
+											  setHeaderText = {setHeaderText}/>
+							</Route>	
+							<Route path="/listsoap">
+								<AdminListSoaps setToken = {props.setToken} 
 											  token = {props.token}
 											  setHeaderText = {setHeaderText}/>
 							</Route>	

@@ -1,5 +1,5 @@
 
-export const DropDownSelect = (props) => {
+const DropDownSelectNoCounter = (props) => {
 	
 
 	const items = props.data;
@@ -9,21 +9,15 @@ export const DropDownSelect = (props) => {
 	
 	return (
 		<>
-			<table><tbody>
+			<table style={{width: "100%", border: 'solid'}}><tbody>
 			<tr>
-				<td >
+				<td style={{width: '50%'}}>
 				<label>{props.label}</label>
+				</td><td >
 					<select name={props.name}
 						onChange={props.changeHandler}>
 							{listItems}
 					</select>
-				</td>
-				<td >
-				<label> {props.label2}</label>
-					<input name={props.name}
-							type='text'
-							placeholder = {props.amnt}
-							onChange ={props.changeProportion}/>
 				</td>
 			</tr>
 			</tbody></table>
@@ -32,5 +26,5 @@ export const DropDownSelect = (props) => {
 }
 
 
-export default DropDownSelect;
+export default DropDownSelectNoCounter;
 

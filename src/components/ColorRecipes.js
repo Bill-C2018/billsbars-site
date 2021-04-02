@@ -1,41 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import DropDownSelect from './DropDownSelect';
+import { doPostCall, doGetCall} from './FetchHandlers';
+import {BaseUrl, BasePort} from './Constants';
 
-
-const getBaseScents = async (uri) => {
-	
-	let encodedUri = encodeURI(uri);
-	console.log("calling fetch with uri ", encodedUri);
-	const requestOptions = {
-		method: 'GET',
-		headers: { 'Content-Type': 'application/json'},
-	};
-	
-	const response = await fetch(encodedUri,requestOptions);
-	if(response.status !== 200) {
-		console.log(response.status);
-		const text = response.status;
-		throw Error(text);
-	}
-	return response.json();
-	
-}
-
-const postCall = async (data,uri,token) => {
-
-	const requestOptions = {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json',
-					'Access-Control-Allow-Origin': '*',
-						'Access-Token': token},
-		body: data
-	};
-	const response = await fetch(uri, requestOptions);
-	if(response.status !== 200) {
-		throw Error(response.status);
-	}
-	return response.json();
-}
 
 const ColorRecipes = (props) => {
 	
@@ -46,17 +13,17 @@ const ColorRecipes = (props) => {
 	
 	
 	const doFetch =  async () => {
-		let res = await getBaseScents("http://localhost:8081/basecolors");
-		console.log(res);
+		let res = await doGetCall(BaseUrl+BasePort + "/basecolors",false);
 		const scentArray = res['baseColors'];
-		console.log(scentArray);
 		setData(scentArray);
 		
 	}
 	
+	const setHeaderText = props.setHeaderText;
 	useEffect ( () => {
 		doFetch();
-		props.setHeaderText("New Color");
+		setHeaderText("New Color");
+// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[]);
 
 
@@ -107,9 +74,9 @@ const ColorRecipes = (props) => {
 	
 	const submitData = async () => {
 		let i = 0;
-		var scents = new Array();
+		var scents = [];
 		for(i = 0; i < baseScent.length; i++) {
-			if(baseScent[i] != "NONE") {
+			if(baseScent[i] !== "NONE") {
 				let basescent = {color: baseScent[i],numberDrops: baseScentProportion[i]};
 				scents.push(basescent);
 			}
@@ -121,30 +88,25 @@ const ColorRecipes = (props) => {
 		}
 		
 		let d = JSON.stringify(data);
-
-		console.log(d);
-		const res = await postCall(d,"http://localhost:8081/colorrecipe",props.token);
-		console.log(res);
-		
-		
+		await doPostCall(d,BaseUrl+BasePort + "/colorrecipe",props.token,true);
 	}
 	
 	const submitHandler = (event) => {
 		event.preventDefault();
 		console.log(props.token);
-		if (scentName.trim().length == 0 ) {
+		if (scentName.trim().length === 0 ) {
 			console.log("invalid name");
 			return;
 		}
 		var validBase = 0;
 		var i;
 		for(i = 0; i < baseScent.length; i++) {
-			if (baseScent[i] != "NONE") {
+			if (baseScent[i] !== "NONE") {
 				validBase = 1;
 			}
 		}
 		
-		if(validBase != 1 ) {
+		if(validBase !== 1 ) {
 			console.log(validBase);
 			console.log("Invalid base scents");
 			return;
@@ -158,12 +120,12 @@ const ColorRecipes = (props) => {
 			<div align="center">
 			<form onSubmit={submitHandler}>
 			<table><tbody>
-			<tr>
+			<tr><td>
 				<label>Color Name</label>
 				<input type='text'
 						placeholder='enter name'
 						onChange={changeNameHandler}/>
-			</tr><tr>
+			</td></tr><tr><td>
 			<DropDownSelect data = {data}
 							label = 'Base Color'
 							label2 = '# of drops'
@@ -171,7 +133,7 @@ const ColorRecipes = (props) => {
 							name = 'basescents0'
 							changeProportion = {changeProportionhandler}
 							changeHandler = {changeHandler}/>
-			</tr><tr>
+			</td></tr><tr><td>
 			<DropDownSelect data = {data}
 							label = 'Base Color'
 							label2 = '# of drops'
@@ -179,7 +141,7 @@ const ColorRecipes = (props) => {
 							name = 'basescents1'
 							changeProportion = {changeProportionhandler}
 							changeHandler = {changeHandler}/>
-			</tr><tr>
+			</td></tr><tr><td>
 			<DropDownSelect data = {data}
 							label = 'Base Color'
 							label2 = '# of drops'
@@ -187,7 +149,7 @@ const ColorRecipes = (props) => {
 							name = 'basescents2'
 							changeProportion = {changeProportionhandler}
 							changeHandler = {changeHandler}/>
-			</tr><tr>
+			</td></tr><tr><td>
 			<DropDownSelect data = {data}
 							label = 'Base Color'
 							label2 = '# of drops'
@@ -195,13 +157,13 @@ const ColorRecipes = (props) => {
 							name = 'basescents3'
 							changeProportion = {changeProportionhandler}
 							changeHandler = {changeHandler}/>
-			</tr><tr>
+			</td></tr><tr><td>
 			<label>
 				<input
 					type='submit'
 					value='Submit'/>
 			</label>
-			</tr>
+			</td></tr>
 			</tbody></table>
 			</form>
 

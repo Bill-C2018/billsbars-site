@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 
 import './login.css';
-import {postCall } from './FetchHandlers';
+import { doPostCall } from './FetchHandlers';
+import {BaseUrl, BasePort} from './Constants';
 
 const Login = (props) => {
 	
@@ -20,8 +21,20 @@ const Login = (props) => {
 			"emailAddy": "not needed",
         };	
 
+		let d = JSON.stringify(s);
+		const token = await doPostCall(d,BaseUrl+BasePort + '/login',' ',false);
+		if(token != null) {
+			props.setToken(token['token']);
+			props.setRole(token['role']);
+		}
+/*		
 		try {
-			const token = await postCall(s,'http://localhost:8081/login',' ','TRUE');
+			
+			const token = await postCall(d,BaseUrl+BasePort + '/login',' ');
+			console.log(token['code']);
+			if(token['code'] != '200') {
+				showError(token['message']);
+			}
 			console.log(token);
 			console.log("token == " + token['token']);
 			props.setToken(token['token']);
@@ -31,12 +44,13 @@ const Login = (props) => {
 			
 			console.log(error);
 			if (error.message === "404") {
-				setErrorMessage("Not Found");
+				showError("Not Found");
 			} else {
-				setErrorMessage(error.message);
+				showError(error.message);
 			}
 
 		}
+*/
 	}
 	
 	const createAcctHandler = async (event) => {
@@ -47,16 +61,29 @@ const Login = (props) => {
 			"emailAddy": emailAddy,
         };	
 
-		console.log(s);
+		let d = JSON.stringify(s);
+		const token = await doPostCall(d,BaseUrl+BasePort + '/customer',' ',false);
+		if(token != null) {
+			props.setToken(token['token']);
+			props.setRole(token['role']);
+			loginHandler(event);
+		}
+
+/*		
 		try {
-			const token = await postCall(s,'http://localhost:8081/customer',' ','TRUE');
+			const token = await postCall(d,'http://localhost:8081/customer',' ');
+			console.log(token);
+			if(token['code'] != '200') {
+				showError(token['message']);
+			}
+			console.log("++++");
 			console.log(token);
 			loginHandler(event);
 			
 		} catch (error) {
 			console.log(error);
 		}
-	
+*/
 	}
 	
 	const handleClick = () => {
